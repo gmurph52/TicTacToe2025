@@ -12,6 +12,7 @@ function Square({value, onSquareClick}) {
 function Board({xIsNext, squares, onPlay}) {
   
   function handleClick(i) {
+    // Can't play on a square that is already filled or if the game is over
     if(squares[i] || calculateWinner(squares)) {
       return;
     }
@@ -25,6 +26,7 @@ function Board({xIsNext, squares, onPlay}) {
     onPlay(nextSquares);
   }
 
+  // Handle the game status
   const winner = calculateWinner(squares);
   let status;
   if (winner) {
@@ -33,24 +35,21 @@ function Board({xIsNext, squares, onPlay}) {
     status = `Next player: ${xIsNext ? 'X' : 'O'}`;
   }
 
+  // Build the board
+  const boardRows = [];
+  for (let i = 0; i < 3; i++) {
+    const row = [];
+    for (let j = 0; j < 3; j++) {
+      let squareIndex = i * 3 + j;
+      row.push(<Square value={squares[squareIndex]} onSquareClick={() => handleClick(squareIndex)} />);
+    }
+    boardRows.push(<div className="board-row">{row}</div>);
+  }
+
   return (
     <>
       <div className="status">{status}</div>
-      <div className="board-row">
-        <Square value={squares[0]} onSquareClick={() => handleClick(0)} />
-        <Square value={squares[1]} onSquareClick={() => handleClick(1)} />
-        <Square value={squares[2]} onSquareClick={() => handleClick(2)} />
-      </div>
-      <div className="board-row">
-        <Square value={squares[3]} onSquareClick={() => handleClick(3)} />
-        <Square value={squares[4]} onSquareClick={() => handleClick(4)} />
-        <Square value={squares[5]} onSquareClick={() => handleClick(5)} />
-      </div>
-      <div className="board-row">
-        <Square value={squares[6]} onSquareClick={() => handleClick(6)} />
-        <Square value={squares[7]} onSquareClick={() => handleClick(7)} />
-        <Square value={squares[8]} onSquareClick={() => handleClick(8)} />
-      </div>
+      {boardRows}
     </>
   );
 }
@@ -73,6 +72,17 @@ export default function Game() {
 
   const moves = history.map((squares, moveNum) => {
     let description;
+
+    if (moveNum === history.length - 1) {
+      description = moveNum === 0 ? 'You are at the game start' : `You are at move #${moveNum}`;
+    
+      return (
+        <li key={moveNum}>
+          <div>{description}</div> 
+        </li>
+      );
+    }
+
     if (moveNum > 0) {
       description = `Go to move #${moveNum}`;
     } else {

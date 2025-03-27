@@ -71,6 +71,11 @@ body {
   width: 34px;
 }
 
+.winning-square {
+  background: black;
+  color: white;
+}
+
 .board-row:after {
   clear: both;
   content: '';
@@ -80,6 +85,7 @@ body {
 .status {
   margin-bottom: 10px;
 }
+
 .game {
   display: flex;
   flex-direction: row;

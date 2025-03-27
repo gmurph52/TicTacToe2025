@@ -1,16 +1,44 @@
 import { useState } from 'react';
 
-function Square({value, onSquareClick}) {
-
+function Square({value, isWinningSquare, onSquareClick}) {
+  let btnClass = 'square';
+  if (isWinningSquare) {
+    btnClass += ' winning-square';
+  } 
   return (
-    <button className="square" onClick={onSquareClick}>
+    <button className={btnClass} onClick={onSquareClick}>
       {value}
     </button>
   );
 }
 
 function Board({xIsNext, squares, onPlay}) {
-  
+
+  function calculateWinner(squares) {
+    const lines = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8],
+      [2, 4, 6]
+    ];
+    for (let i = 0; i < lines.length; i++) {
+      const [a, b, c] = lines[i];
+      if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+        let winner = squares[a];
+        let winnerIndexes = [a, b, c];
+        return { winner: winner, winningSquares: winnerIndexes };
+      }
+    }
+    if (squares.every((square) => square !== null)) {
+      return { winner: `Cat's game`, winningSquares: null };
+    }
+    return null;
+  }
+
   function handleClick(i) {
     // Can't play on a square that is already filled or if the game is over
     if(squares[i] || calculateWinner(squares)) {
@@ -27,7 +55,9 @@ function Board({xIsNext, squares, onPlay}) {
   }
 
   // Handle the game status
-  const winner = calculateWinner(squares);
+  const winnerResuluts = calculateWinner(squares);
+  const winner = winnerResuluts?.winner;
+  const winningSquares = winnerResuluts?.winningSquares;
   let status;
   if (winner) {
     status = `Winner: ${winner}`;
@@ -41,7 +71,8 @@ function Board({xIsNext, squares, onPlay}) {
     const row = [];
     for (let j = 0; j < 3; j++) {
       let squareIndex = i * 3 + j;
-      row.push(<Square value={squares[squareIndex]} onSquareClick={() => handleClick(squareIndex)} />);
+      let isWinningSquare = winningSquares?.some(x => x === squareIndex);
+      row.push(<Square value={squares[squareIndex]} isWinningSquare={isWinningSquare} onSquareClick={() => handleClick(squareIndex)} />);
     }
     boardRows.push(<div className="board-row">{row}</div>);
   }
@@ -114,29 +145,9 @@ export default function Game() {
         <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
       </div>
       <div className="game-info">
-        <button onClick={() =>toggleSort()}>Toggle sort</button>
+        <button onClick={() => toggleSort()}>Toggle sort</button>
         <ul>{moves}</ul>
       </div>
     </div>
   )
-}
-
-function calculateWinner(squares) {
-  const lines = [
-    [0, 1, 2],
-    [3, 4, 5],
-    [6, 7, 8],
-    [0, 3, 6],
-    [1, 4, 7],
-    [2, 5, 8],
-    [0, 4, 8],
-    [2, 4, 6]
-  ];
-  for (let i = 0; i < lines.length; i++) {
-    const [a, b, c] = lines[i];
-    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-      return squares[a];
-    }
-  }
-  return null;
 }

@@ -108,6 +108,13 @@ export default function Game() {
     moves = getMoves();
   }
 
+  function restartGame() {
+    setHistory([Array(9).fill(null)]);
+    setCurrentMove(0);
+    setDesc(false);
+  }
+
+
   function getMoves() {
     let moves = history.map((squares, moveNum) => {
       let description;
@@ -145,7 +152,8 @@ export default function Game() {
         <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
       </div>
       <div className="game-info">
-        <button onClick={() => toggleSort()}>Toggle sort</button>
+        <button onClick={() => toggleSort()}>Toggle Sort</button>
+        <button onClick={() => restartGame()} className="restart-button">Restart Game</button>
         <ul>{moves}</ul>
       </div>
     </div>

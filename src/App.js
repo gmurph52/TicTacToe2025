@@ -51,7 +51,7 @@ function Board({xIsNext, squares, onPlay}) {
       nextSquares[i] = 'O';
     }
 
-    onPlay(nextSquares);
+    onPlay(nextSquares, i);
   }
 
   // Handle the game status
@@ -86,15 +86,15 @@ function Board({xIsNext, squares, onPlay}) {
 }
 
 export default function Game() {
-  const [history, setHistory] = useState([Array(9).fill(null)]);
+  const [history, setHistory] = useState([{moveIndex: null, squares: Array(9).fill(null)}]);
   const [currentMove, setCurrentMove] = useState(0);
   const [desc, setDesc] = useState(false);
   const xIsNext = currentMove % 2 === 0;
-  const currentSquares = history[currentMove];
+  const currentSquares = history[currentMove]?.squares;
   let moves = getMoves();
 
-  function handlePlay(nextSquares) {
-    const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
+  function handlePlay(nextSquares, moveIndex) {
+    const nextHistory = [...history.slice(0, currentMove + 1), {moveIndex: moveIndex, squares: nextSquares}];
     setHistory(nextHistory);
     setCurrentMove(nextHistory.length - 1);
   }
@@ -109,18 +109,18 @@ export default function Game() {
   }
 
   function restartGame() {
-    setHistory([Array(9).fill(null)]);
+    setHistory([{moveIndex: null, squares: Array(9).fill(null)}]);
     setCurrentMove(0);
     setDesc(false);
   }
 
-
   function getMoves() {
-    let moves = history.map((squares, moveNum) => {
+    let moves = history.map((move, moveNum) => {
       let description;
-  
+      const row = Math.floor((move.moveIndex) / 3);
+      const col = (move.moveIndex) % 3; 
       if (moveNum === history.length - 1) {
-        description = moveNum === 0 ? 'You are at the game start' : `You are at move #${moveNum}`;
+        description = moveNum === 0 ? 'You are at the game start' : `You are at move #${moveNum} (${row}, ${col})`;
       
         return (
           <li key={moveNum}>
@@ -128,11 +128,11 @@ export default function Game() {
           </li>
         );
       }
-  
+
       if (moveNum > 0) {
-        description = `Go to move #${moveNum}`;
+        description = `Go to move #${moveNum} (${row}, ${col})`;
       } else {
-        description = 'Go to game start';
+        description = `Go to game start`;
       }
       return (
         <li key={moveNum}>

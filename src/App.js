@@ -125,8 +125,9 @@ export default function Game() {
       let description;
       const row = Math.floor((move.moveIndex) / 3);
       const col = (move.moveIndex) % 3; 
-      if (moveNum === history.length - 1) {
-        description = moveNum === 0 ? 'You are at the game start' : `You are at move #${moveNum} (${row}, ${col})`;
+ 
+      if (moveNum === 0) {
+        description = 'You are at the game start';
       
         return (
           <li key={moveNum}>
@@ -135,7 +136,9 @@ export default function Game() {
         );
       }
 
-      if (moveNum > 0) {
+      if (moveNum === history.length - 1) {
+        description = `You are at move #${moveNum} (${row}, ${col})`;
+      } else if (moveNum > 0) {
         description = `Go to move #${moveNum} (${row}, ${col})`;
       } else {
         description = `Go to game start`;

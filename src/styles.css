@@ -76,6 +76,10 @@ body {
   color: white;
 }
 
+.last-square {
+  opacity: 0.5;
+}
+
 .board-row:after {
   clear: both;
   content: '';

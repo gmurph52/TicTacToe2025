@@ -1,18 +1,24 @@
 import { useState } from 'react';
 
-function Square({value, isWinningSquare, onSquareClick}) {
+// Run npm start to start the app
+
+function Square({value, isWinningSquare, isLastPlayed, onSquareClick}) {
   let btnClass = 'square';
+  let valueClass = undefined;
   if (isWinningSquare) {
     btnClass += ' winning-square';
   } 
+  if (isLastPlayed) {
+    valueClass = 'last-square';
+  } 
   return (
     <button className={btnClass} onClick={onSquareClick}>
-      {value}
+      <div className={valueClass}>{value}</div>
     </button>
   );
 }
 
-function Board({xIsNext, squares, onPlay}) {
+function Board({xIsNext, squares, lastPlayedIndex, onPlay }) {
 
   function calculateWinner(squares) {
     const lines = [
@@ -50,7 +56,6 @@ function Board({xIsNext, squares, onPlay}) {
     } else {
       nextSquares[i] = 'O';
     }
-
     onPlay(nextSquares, i);
   }
 
@@ -72,7 +77,7 @@ function Board({xIsNext, squares, onPlay}) {
     for (let j = 0; j < 3; j++) {
       let squareIndex = i * 3 + j;
       let isWinningSquare = winningSquares?.some(x => x === squareIndex);
-      row.push(<Square value={squares[squareIndex]} isWinningSquare={isWinningSquare} onSquareClick={() => handleClick(squareIndex)} />);
+      row.push(<Square value={squares[squareIndex]} isWinningSquare={isWinningSquare} isLastPlayed={squareIndex === lastPlayedIndex} onSquareClick={() => handleClick(squareIndex)} />);
     }
     boardRows.push(<div className="board-row">{row}</div>);
   }
@@ -91,6 +96,7 @@ export default function Game() {
   const [desc, setDesc] = useState(false);
   const xIsNext = currentMove % 2 === 0;
   const currentSquares = history[currentMove]?.squares;
+  const lastPlayedIndex = history[currentMove]?.moveIndex;
   let moves = getMoves();
 
   function handlePlay(nextSquares, moveIndex) {
@@ -149,7 +155,7 @@ export default function Game() {
   return (
     <div className="game">
       <div className="game-board">
-        <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
+        <Board xIsNext={xIsNext} squares={currentSquares} lastPlayedIndex={lastPlayedIndex} onPlay={handlePlay} />
       </div>
       <div className="game-info">
         <button onClick={() => toggleSort()}>Toggle Sort</button>

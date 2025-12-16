@@ -4,8 +4,10 @@
 
 body {
   font-family: sans-serif;
-  margin: 20px;
-  padding: 0;
+  display: block;
+  height: 100vh;
+  width: 100%;
+  margin: 0;
 }
 
 h1 {
@@ -44,31 +46,34 @@ code {
 
 ul {
   padding-inline-start: 20px;
+   li {
+    margin-bottom: 16px;
+   }
 }
 
-* {
-  box-sizing: border-box;
-}
-
-body {
-  font-family: sans-serif;
-  margin: 20px;
-  padding: 0;
+#root {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 }
 
 .square {
   background: #fff;
   border: 1px solid #999;
   float: left;
-  font-size: 24px;
+  font-size: 85px;
   font-weight: bold;
-  line-height: 34px;
-  height: 34px;
+  line-height: 164px;
+  height: 164px;
   margin-right: -1px;
   margin-top: -1px;
   padding: 0;
   text-align: center;
-  width: 34px;
+  width: 164px;
+  cursor: pointer;
+  border-radius: 0;
 }
 
 .winning-square {
@@ -93,6 +98,7 @@ body {
 .game {
   display: flex;
   flex-direction: row;
+  gap: 32px;
 }
 
 .game-info {
@@ -101,4 +107,26 @@ body {
 
 .restart-button {
   margin-left: 16px;
+}
+
+button {
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+  background-color: #e0e0e0;
+  border: none;
+  border-radius: 4px;
+  box-shadow: 0 3px 1px -2px rgba(0,0,0,0.1), 0 2px 2px 0 rgba(0,0,0,0.1), 0 1px 5px 0 rgba(0,0,0,0.08);
+  transition: background-color 0.2s ease;
+  cursor: pointer;
+  outline: none;
+}
+
+button:hover {
+  background-color: #f0f0f0;
+}
+
+button:active {
+  background-color: #cccccc;
 }

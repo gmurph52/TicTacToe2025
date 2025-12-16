@@ -84,7 +84,7 @@ function Board({xIsNext, squares, lastPlayedIndex, onPlay }) {
 
   return (
     <>
-      <div className="status">{status}</div>
+      <h1 className="status">{status}</h1>
       {boardRows}
     </>
   );
